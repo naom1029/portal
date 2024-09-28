@@ -8,7 +8,6 @@ const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // ユーザー登録エンドポイント
-// ユーザー登録エンドポイント
 router.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
 
