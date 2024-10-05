@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import ShortcutSection from "./components/ShortcutSection";
 import Login from "./components/Login";
+import Register from "./components/Register";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
               }
             />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       </div>
