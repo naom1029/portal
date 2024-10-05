@@ -1,8 +1,10 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import ShortcutSection from "./components/ShortcutSection";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import PrivateRoute from "./components/PrivateRoute"; // 追加
 
 export default function App() {
   return (
@@ -11,14 +13,9 @@ export default function App() {
         <Header />
         <main className="container mx-auto p-4 md:p-6 lg:p-8">
           <Routes>
-            <Route
-              path="/"
-              element={
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <ShortcutSection />
-                </div>
-              }
-            />
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<ShortcutSection />} />
+            </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>

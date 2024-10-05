@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setToken } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +20,10 @@ export default function Login() {
       body: JSON.stringify({ email, password }),
     });
     if (response.ok) {
+      const data = await response.json();
+      setToken(data.token);
       console.log("Login successful");
+      navigate("/");
     } else {
       console.log("Invalid credentials");
     }
