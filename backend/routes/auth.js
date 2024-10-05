@@ -32,7 +32,7 @@ router.post(
     '/login',
     [
         // バリデーションルール
-        body('username').notEmpty().withMessage('Username is required'),
+        body('email').notEmpty().withMessage('email is required'),
         body('password').notEmpty().withMessage('Password is required'),
     ],
     async (req, res) => {
@@ -42,10 +42,10 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
         // ユーザーをDBから取得
-        db.get(`SELECT * FROM users WHERE username = ?`, [username], async (err, user) => {
+        db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
             if (err) {
                 return res.status(500).json({ error: 'Internal server error' });
             }
@@ -61,7 +61,7 @@ router.post(
                 }
 
                 // JWTトークンの生成
-                const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+                const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
                 res.json({ token });
             } catch (error) {
                 res.status(500).json({ error: 'Internal server error' });
