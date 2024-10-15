@@ -23,6 +23,16 @@ const db = new sqlite3.Database(dbPath, (err) => {
       email TEXT UNIQUE,
       isAdmin BOOLEAN DEFAULT FALSE
     )`);
+
+        // ショートカットアイテムテーブルの作成
+        db.run(`CREATE TABLE IF NOT EXISTS shortcuts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            title TEXT,
+            url TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+        )`);
     }
 });
 
