@@ -1,6 +1,6 @@
 import ShortcutList from "./ShortcutList";
 import ShortcutForm from "./ShortcutForm";
-import { useShortcuts } from "../hooks/useSHortcuts";
+import { useShortcuts } from "../hooks/useShortcuts";
 
 export default function ShortcutSection() {
   const { shortcuts, addShortcut } = useShortcuts();

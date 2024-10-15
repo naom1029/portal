@@ -1,31 +1,45 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { useShortcuts } from "../hooks/useShortcuts";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setToken } = useAuthStore();
+  const setToken = useAuthStore((state) => state.setToken);
+  const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
+  const { fetchShortcuts } = useShortcuts();
+
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const apiUrl = import.meta.env.VITE_API_BASE_URL;
-    const response = await fetch(`${apiUrl}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      setToken(data.token);
-      console.log("Login successful");
-      navigate("/");
-    } else {
-      console.log("Invalid credentials");
+    try {
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setToken(data.token);
+        setUser({ id: data.userId });
+        fetchShortcuts();
+        console.log("Login successful");
+        navigate("/");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "無効な認証情報です");
+      }
+    } catch (err) {
+      console.error("ログイン中にエラーが発生しました", err);
+      setError("ログイン中にエラーが発生しました");
     }
   };
 
@@ -76,6 +90,7 @@ export default function Login() {
         >
           ログイン
         </button>
+        {error && <p className="text-red-500">{error}</p>}
       </form>
     </div>
   );
