@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useAuthStore } from "../../auth/store/authStore";
+import { Shortcut } from "../types/types";
+import {
+  fetchShortcuts as fetchShortcutsService,
+  addShortcut as addShortcutService,
+} from "../services/shortutsService";
 
 export function useShortcuts() {
   const [shortcuts, setShortcuts] = useState<any[]>([]);
@@ -9,26 +13,19 @@ export function useShortcuts() {
   const fetchShortcuts = async () => {
     if (user?.id) {
       try {
-        const apiUrl = import.meta.env.VITE_API_BASE_URL;
-        const response = await axios.get(
-          `${apiUrl}/api/shortcuts/user/${user.id}/fetch`
-        );
-        setShortcuts(response.data);
+        const data = await fetchShortcutsService(user.id);
+        setShortcuts(data);
       } catch (error) {
         console.error("ショートカットの取得に失敗しました", error);
       }
     }
   };
 
-  const addShortcut = async (shortcut: any) => {
+  const addShortcut = async (shortcut: Omit<Shortcut, "id">) => {
     if (user?.id) {
       try {
-        const apiUrl = import.meta.env.VITE_API_BASE_URL;
-        const response = await axios.post(
-          `${apiUrl}/api/shortcuts/user/${user.id}/add`,
-          shortcut
-        );
-        setShortcuts((prevShortcuts) => [...prevShortcuts, response.data]);
+        const newShortcut = await addShortcutService(user.id, shortcut);
+        setShortcuts((prevShortcuts) => [...prevShortcuts, newShortcut]);
       } catch (error) {
         console.error("ショートカットの追加に失敗しました", error);
       }
