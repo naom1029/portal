@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
-import { useShortcuts } from "../hooks/useShortcuts";
+import { useShortcuts } from "../../../hooks/useShortcuts";
 
 export default function Login() {
   const [email, setEmail] = useState("");

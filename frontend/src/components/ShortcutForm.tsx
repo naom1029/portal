@@ -3,7 +3,7 @@ import { useState } from "react";
 import { PlusIcon } from "lucide-react";
 import { Shortcut } from "../types/types";
 import axios from "axios";
-import { useAuthStore } from "../store/authStore"; // ユーザー認証ストアのインポート
+import { useAuthStore } from "../feature/auth/store/authStore"; // ユーザー認証ストアのインポート
 
 type ShortcutFormProps = {
   onAddShortcut: (shortcut: Shortcut) => void;

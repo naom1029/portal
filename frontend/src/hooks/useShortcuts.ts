@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../feature/auth/store/authStore";
 
 export function useShortcuts() {
   const [shortcuts, setShortcuts] = useState<any[]>([]);

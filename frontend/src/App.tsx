@@ -2,9 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import ShortcutSection from "./components/ShortcutSection";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import PrivateRoute from "./components/PrivateRoute"; // 追加
+import Login from "./feature/auth/components/Login";
+import Register from "./feature/auth/components/Register";
+import PrivateRoute from "./feature/auth/components/PrivateRoute";
 
 export default function App() {
   return (
