@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/authService";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -10,21 +11,12 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-    const response = await fetch(`${apiUrl}/api/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, email, password }),
-    });
-
-    if (response.ok) {
+    try {
+      await registerUser(username, email, password);
       console.log("登録に成功しました");
       navigate("/login");
-    } else {
-      const data = await response.json();
-      console.error("登録に失敗しました:", data.message || "不明なエラー");
+    } catch (error: any) {
+      console.error("登録に失敗しました:", error.message);
     }
   };
 
