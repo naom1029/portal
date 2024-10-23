@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { useShortcuts } from "../../shortcut/hooks/useShortcuts";
+import { loginUser } from "../services/authService";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,31 +16,18 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
-    const apiUrl = import.meta.env.VITE_API_BASE_URL;
     try {
-      const response = await fetch(`${apiUrl}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setToken(data.token);
-        setUser({ id: data.userId });
-        fetchShortcuts();
-        console.log("Login successful");
-        navigate("/");
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || "無効な認証情報です");
-      }
-    } catch (err) {
-      console.error("ログイン中にエラーが発生しました", err);
-      setError("ログイン中にエラーが発生しました");
+      const data = await loginUser(email, password);
+      setToken(data.token);
+      setUser({ id: data.userId });
+      fetchShortcuts();
+      console.log("Login successful");
+      navigate("/");
+    } catch (error: any) {
+      setError(error.message);
+      console.error("ログイン中にエラーが発生しました:", error.message);
     }
   };
 

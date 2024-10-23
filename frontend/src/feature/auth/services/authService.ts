@@ -23,3 +23,21 @@ export const registerUser = async (
     }
   }
 };
+
+export const loginUser = async (email: string, password: string) => {
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
+  try {
+    const response = await axios.post(`${apiUrl}/api/auth/login`, {
+      email,
+      password,
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "無効な認証情報です");
+    }
+    throw new Error("ログイン中にエラーが発生しました");
+  }
+};
