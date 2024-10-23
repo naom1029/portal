@@ -5,7 +5,8 @@ const db = require('../database/sqlite');
 
 // ショートカット追加エンドポイント
 router.post('/user/:user_id/add', (req, res) => {
-    const { user_id, title, url } = req.body;
+    const user_id = req.params.user_id;
+    const { title, url } = req.body;
     const query = `INSERT INTO shortcuts (user_id, title, url) VALUES (?, ?, ?)`;
     db.run(query, [user_id, title, url], function (err) {
         if (err) {
