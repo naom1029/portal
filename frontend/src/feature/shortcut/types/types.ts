@@ -1,5 +1,5 @@
 export type Shortcut = {
-  id: number;
+  id: number | null;
   title: string;
   url: string;
 };

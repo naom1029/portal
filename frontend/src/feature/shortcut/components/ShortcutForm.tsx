@@ -1,9 +1,6 @@
-// frontend/src/components/ShortcutForm.tsx
 import { useState } from "react";
 import { PlusIcon } from "lucide-react";
 import { Shortcut } from "../types/types";
-import axios from "axios";
-import { useAuthStore } from "../../auth/store/authStore"; // ユーザー認証ストアのインポート
 
 type ShortcutFormProps = {
   onAddShortcut: (shortcut: Shortcut) => void;
@@ -13,21 +10,17 @@ export default function ShortcutForm({ onAddShortcut }: ShortcutFormProps) {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const user = useAuthStore((state) => state.user); // ユーザー情報の取得
 
   const handleSubmit = async (e: React.FormEvent) => {
-    const apiUrl = import.meta.env.VITE_API_BASE_URL;
     e.preventDefault();
-    if (title && url && user?.id) {
+    if (title && url) {
       try {
-        const response = await axios.post(
-          `${apiUrl}/api/shortcuts/user/${user.id}/add`,
-          {
-            title,
-            url,
-          }
-        );
-        onAddShortcut(response.data);
+        const ShortcutItem: Shortcut = {
+          id: null,
+          title,
+          url,
+        };
+        onAddShortcut(ShortcutItem);
         setTitle("");
         setUrl("");
         setError(null);

@@ -13,10 +13,13 @@ export const addShortcut = async (
   userId: number,
   shortcut: Omit<Shortcut, "id">
 ): Promise<Shortcut> => {
+  console.log(shortcut);
+  console.log(userId);
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const response = await axios.post<Shortcut>(
     `${apiUrl}/api/shortcuts/user/${userId}/add`,
     shortcut
   );
+  console.log(response);
   return response.data;
 };
