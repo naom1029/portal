@@ -62,8 +62,15 @@ router.post(
 
                 // JWTトークンの生成
                 const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
-                res.json({ token: token, userId: user.id });
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production', // 環境に応じて secure 設定
+                    sameSite: 'Strict',
+                    maxAge: 3600000
+                });
+                res.json({ userId: user.id });
             } catch (error) {
+                console.error("JWTトークン生成エラー:", error);
                 res.status(500).json({ error: 'Internal server error' });
             }
         });
