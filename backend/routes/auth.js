@@ -79,6 +79,21 @@ router.post(
     }
 );
 
+// ログアウトエンドポイント
+router.post('/logout', (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // 本番環境ではtrue
+            sameSite: 'Lax'
+        });
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.error('ログアウトエラー:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // 認証状態を確認するエンドポイント
 router.get('/me', authenticate, (req, res) => {
     // ミドルウェアで設定したユーザー情報を返す

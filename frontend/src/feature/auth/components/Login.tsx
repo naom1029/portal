@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
 import { loginUser } from "../services/authService";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
 
   const [error, setError] = useState<string | null>(null);
@@ -16,8 +14,7 @@ export default function Login() {
     setError(null);
 
     try {
-      const response = await loginUser(email, password);
-      setUser({ id: response.data.userId });
+      await loginUser(email, password);
       console.log("Login successful");
       navigate("/");
     } catch (error: any) {
