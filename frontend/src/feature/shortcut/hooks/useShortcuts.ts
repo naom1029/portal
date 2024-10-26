@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useAuthStore } from "../../auth/store/authStore";
 import { Shortcut } from "../types/types";
 import { useShortcutActions } from "../services/shortutsService";
@@ -11,7 +11,7 @@ export function useShortcuts() {
     addShortcut: addShortcutService,
   } = useShortcutActions();
 
-  const fetchShortcuts = async () => {
+  const fetchShortcuts = useCallback(async () => {
     if (user?.id) {
       try {
         const data = await fetchShortcutsService();
@@ -20,18 +20,21 @@ export function useShortcuts() {
         console.error("ショートカットの取得に失敗しました", error);
       }
     }
-  };
+  }, [user?.id, fetchShortcutsService]);
 
-  const addShortcut = async (shortcut: Omit<Shortcut, "id">) => {
-    if (user?.id) {
-      try {
-        const newShortcut = await addShortcutService(user.id, shortcut);
-        setShortcuts((prevShortcuts) => [...prevShortcuts, newShortcut]);
-      } catch (error) {
-        console.error("ショートカットの追加に失敗しました", error);
+  const addShortcut = useCallback(
+    async (shortcut: Omit<Shortcut, "id">) => {
+      if (user?.id) {
+        try {
+          const newShortcut = await addShortcutService(user.id, shortcut);
+          setShortcuts((prevShortcuts) => [...prevShortcuts, newShortcut]);
+        } catch (error) {
+          console.error("ショートカットの追加に失敗しました", error);
+        }
       }
-    }
-  };
+    },
+    [user?.id, addShortcutService]
+  );
 
   return { shortcuts, addShortcut, fetchShortcuts };
 }
