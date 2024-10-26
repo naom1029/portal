@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
+import axios from "axios";
 interface User {
   id: number;
 }
@@ -28,15 +28,23 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           user: null,
         })),
-      initializeAuth: () => {
-        // クッキーやセッションストレージを確認して認証状態をリセットする
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("token="))
-          ?.split("=")[1];
+      initializeAuth: async () => {
+        try {
+          // HttpOnly属性を設定したクッキーのため、ブラウザからはアクセスできない
+          // バックエンドのエンドポイントを呼び出して認証状態を確認
+          const apiUrl =
+            import.meta.env.VITE_API_BASE_URL || "https://localhost:5000";
+          const response = await axios.get(`${apiUrl}/api/auth/me`, {
+            withCredentials: true, // クッキーを送信するための設定
+          });
 
-        if (!token) {
-          // クッキーがなければ認証状態をクリアする
+          const user = response.data.user;
+          set(() => ({
+            isAuthenticated: true,
+            user,
+          }));
+        } catch (error) {
+          console.error("Authentication failed:", error);
           set(() => ({
             isAuthenticated: false,
             user: null,
@@ -45,7 +53,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: "auth-storage", // ストレージキーの名前
+      name: "auth-storage",
     }
   )
 );

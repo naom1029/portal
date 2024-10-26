@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../database/sqlite');
+const authenticate = require('../middlewares/authenticate');
 require('dotenv').config();
 
 const router = express.Router();
@@ -36,6 +37,7 @@ router.post(
         body('password').notEmpty().withMessage('Password is required'),
     ],
     async (req, res) => {
+        console.log('login');
         // バリデーション結果の取得
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -76,5 +78,12 @@ router.post(
         });
     }
 );
+
+// 認証状態を確認するエンドポイント
+router.get('/me', authenticate, (req, res) => {
+    // ミドルウェアで設定したユーザー情報を返す
+    const { id, email } = req.user;
+    res.json({ id, email });
+});
 
 module.exports = router;

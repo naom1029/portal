@@ -8,6 +8,7 @@ import PrivateRoute from "./feature/auth/components/PrivateRoute";
 import { useAuthStore } from "./feature/auth/store/authStore";
 export default function App() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
+
   useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
