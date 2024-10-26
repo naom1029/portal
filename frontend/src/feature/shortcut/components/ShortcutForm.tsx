@@ -3,7 +3,7 @@ import { PlusIcon } from "lucide-react";
 import { Shortcut } from "../types/types";
 
 type ShortcutFormProps = {
-  onAddShortcut: (shortcut: Shortcut) => void;
+  onAddShortcut: (shortcut: Omit<Shortcut, "id">) => void;
 };
 
 export default function ShortcutForm({ onAddShortcut }: ShortcutFormProps) {

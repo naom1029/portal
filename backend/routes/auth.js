@@ -83,7 +83,7 @@ router.post(
 router.get('/me', authenticate, (req, res) => {
     // ミドルウェアで設定したユーザー情報を返す
     const { id, email } = req.user;
-    res.json({ id, email });
+    res.json({ id });
 });
 
 module.exports = router;

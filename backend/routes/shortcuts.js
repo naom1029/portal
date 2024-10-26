@@ -7,15 +7,15 @@ const authenticate = require('../middlewares/authenticate');
 router.use(authenticate);
 
 // ショートカット追加エンドポイント
-router.post('/user/:user_id/add', (req, res) => {
-    const user_id = req.params.user_id;
+router.post('/user/me/add', (req, res) => {
+    console.log("req.user.id", req.user.id);
     const { title, url } = req.body;
     const query = `INSERT INTO shortcuts (user_id, title, url) VALUES (?, ?, ?)`;
-    db.run(query, [user_id, title, url], function (err) {
+    db.run(query, [req.user.id, title, url], function (err) {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
-        res.json({ id: this.lastID, user_id, title, url });
+        res.json({ id: this.lastID, title, url });
     });
 });
 

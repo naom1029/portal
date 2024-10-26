@@ -13,19 +13,14 @@ export const useShortcutActions = () => {
   }, []);
 
   const addShortcut = useCallback(
-    async (
-      userId: number,
-      shortcut: Omit<Shortcut, "id">
-    ): Promise<Shortcut> => {
-      console.log(shortcut);
-      console.log(userId);
+    async (shortcut: Omit<Shortcut, "id">): Promise<Shortcut> => {
       const apiUrl = import.meta.env.VITE_API_BASE_URL;
       const response = await axios.post<Shortcut>(
-        `${apiUrl}/api/shortcuts/user/${userId}/add`,
+        `${apiUrl}/api/shortcuts/user/me/add`,
         shortcut,
         { withCredentials: true }
       );
-      console.log(response);
+      console.log(response.data);
       return response.data;
     },
     []

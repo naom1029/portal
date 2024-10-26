@@ -12,8 +12,7 @@ export function useShortcuts() {
   } = useShortcutActions();
 
   const fetchShortcuts = useCallback(async () => {
-    if (user?.id) return;
-
+    if (!user?.id) return;
     try {
       const data = await fetchShortcutsService();
       setShortcuts(data);
@@ -27,7 +26,7 @@ export function useShortcuts() {
       if (!user?.id) return;
 
       try {
-        const newShortcut = await addShortcutService(user.id, shortcut);
+        const newShortcut = await addShortcutService(shortcut);
         setShortcuts((prevShortcuts) => [...prevShortcuts, newShortcut]);
       } catch (error) {
         console.error("ショートカットの追加に失敗しました", error);

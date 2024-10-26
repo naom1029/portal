@@ -30,18 +30,17 @@ export const useAuthStore = create<AuthState>()(
         })),
       initializeAuth: async () => {
         try {
-          // HttpOnly属性を設定したクッキーのため、ブラウザからはアクセスできない
           // バックエンドのエンドポイントを呼び出して認証状態を確認
+          // HttpOnly属性を設定したクッキーのため、ブラウザからはアクセスできない
           const apiUrl =
             import.meta.env.VITE_API_BASE_URL || "https://localhost:5000";
           const response = await axios.get(`${apiUrl}/api/auth/me`, {
             withCredentials: true, // クッキーを送信するための設定
           });
-
-          const user = response.data.user;
+          const user_id = response.data.id;
           set(() => ({
             isAuthenticated: true,
-            user,
+            user: { id: user_id },
           }));
         } catch (error) {
           console.error("Authentication failed:", error);
