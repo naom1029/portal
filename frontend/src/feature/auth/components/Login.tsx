@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
-import { useShortcuts } from "../../shortcut/hooks/useShortcuts";
 import { loginUser } from "../services/authService";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setToken = useAuthStore((state) => state.setToken);
   const setUser = useAuthStore((state) => state.setUser);
   const navigate = useNavigate();
-  const { fetchShortcuts } = useShortcuts();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -19,10 +16,8 @@ export default function Login() {
     setError(null);
 
     try {
-      const data = await loginUser(email, password);
-      setToken(data.token);
-      setUser({ id: data.userId });
-      fetchShortcuts();
+      const response = await loginUser(email, password);
+      setUser({ id: response.data.userId });
       console.log("Login successful");
       navigate("/");
     } catch (error: any) {

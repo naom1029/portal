@@ -31,3 +31,5 @@ dist-ssr
 
 # Data directory
 data
+
+certs

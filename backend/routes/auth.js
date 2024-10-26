@@ -64,8 +64,8 @@ router.post(
                 const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
                 res.cookie('token', token, {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production', // 環境に応じて secure 設定
-                    sameSite: 'Strict',
+                    secure: process.env.NODE_ENV === "production", // 本番環境ではtrue
+                    sameSite: 'Lax',
                     maxAge: 3600000
                 });
                 res.json({ userId: user.id });

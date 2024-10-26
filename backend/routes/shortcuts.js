@@ -2,6 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database/sqlite');
+const authenticate = require('../middlewares/authenticate');
+
+router.use(authenticate);
 
 // ショートカット追加エンドポイント
 router.post('/user/:user_id/add', (req, res) => {
@@ -17,10 +20,9 @@ router.post('/user/:user_id/add', (req, res) => {
 });
 
 // ユーザーIDに基づいてショートカットを取得するエンドポイント
-router.get('/user/:user_id/fetch', (req, res) => {
-    const { user_id } = req.params;
+router.get('/user/me/fetch', (req, res) => {
     const query = `SELECT * FROM shortcuts WHERE user_id = ?`;
-    db.all(query, [user_id], (err, rows) => {
+    db.all(query, [req.user.id], (err, rows) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }

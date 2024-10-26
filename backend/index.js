@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const cookieParser = require('cookie-parser');
+const https = require('https');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
@@ -12,10 +15,16 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/shortcuts', shortcutsRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+const options = {
+    key: fs.readFileSync('./certs/server.key'),
+    cert: fs.readFileSync('./certs/server.crt')
+};
+
+https.createServer(options, app).listen(PORT, () => {
+    console.log(`Secure server running on ${PORT}`);
 });

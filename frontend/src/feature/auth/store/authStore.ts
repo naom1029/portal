@@ -1,38 +1,48 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 interface User {
   id: number;
 }
+
 interface AuthState {
-  token: string | null;
   isAuthenticated: boolean;
   user: User | null;
-  setToken: (token: string | null) => void;
   setUser: (user: User | null) => void;
   logout: () => void;
+  initializeAuth: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      token: null,
       isAuthenticated: false,
       user: null,
-      setToken: (token: string | null) =>
-        set(() => ({
-          token,
-          isAuthenticated: !!token,
-        })),
       setUser: (user: User | null) =>
         set(() => ({
           user,
+          isAuthenticated: !!user,
         })),
       logout: () =>
         set(() => ({
-          token: null,
           isAuthenticated: false,
           user: null,
         })),
+      initializeAuth: () => {
+        // クッキーやセッションストレージを確認して認証状態をリセットする
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          ?.split("=")[1];
+
+        if (!token) {
+          // クッキーがなければ認証状態をクリアする
+          set(() => ({
+            isAuthenticated: false,
+            user: null,
+          }));
+        }
+      },
     }),
     {
       name: "auth-storage", // ストレージキーの名前

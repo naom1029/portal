@@ -5,7 +5,7 @@ export const registerUser = async (
   email: string,
   password: string
 ) => {
-  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || "https://localhost:5000";
 
   try {
     const response = await axios.post(`${apiUrl}/api/auth/register`, {
@@ -13,7 +13,6 @@ export const registerUser = async (
       email,
       password,
     });
-
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.data && error.response.data.message) {
@@ -25,7 +24,7 @@ export const registerUser = async (
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  const apiUrl = import.meta.env.VITE_API_BASE_URL || "https://localhost:5000";
 
   try {
     const response = await axios.post(
@@ -33,8 +32,7 @@ export const loginUser = async (email: string, password: string) => {
       { email, password },
       { withCredentials: true }
     );
-    console.log(response.data);
-    return response.data;
+    return response;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       console.error("Axiosエラー:", error.response?.data || error.message);
