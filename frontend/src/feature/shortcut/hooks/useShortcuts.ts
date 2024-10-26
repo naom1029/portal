@@ -12,25 +12,25 @@ export function useShortcuts() {
   } = useShortcutActions();
 
   const fetchShortcuts = useCallback(async () => {
-    if (user?.id) {
-      try {
-        const data = await fetchShortcutsService();
-        setShortcuts(data);
-      } catch (error) {
-        console.error("ショートカットの取得に失敗しました", error);
-      }
+    if (user?.id) return;
+
+    try {
+      const data = await fetchShortcutsService();
+      setShortcuts(data);
+    } catch (error) {
+      console.error("ショートカットの取得に失敗しました", error);
     }
   }, [user?.id, fetchShortcutsService]);
 
   const addShortcut = useCallback(
     async (shortcut: Omit<Shortcut, "id">) => {
-      if (user?.id) {
-        try {
-          const newShortcut = await addShortcutService(user.id, shortcut);
-          setShortcuts((prevShortcuts) => [...prevShortcuts, newShortcut]);
-        } catch (error) {
-          console.error("ショートカットの追加に失敗しました", error);
-        }
+      if (!user?.id) return;
+
+      try {
+        const newShortcut = await addShortcutService(user.id, shortcut);
+        setShortcuts((prevShortcuts) => [...prevShortcuts, newShortcut]);
+      } catch (error) {
+        console.error("ショートカットの追加に失敗しました", error);
       }
     },
     [user?.id, addShortcutService]
