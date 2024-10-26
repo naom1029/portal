@@ -15,7 +15,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       isAuthenticated: false,
       user: null,
       setUser: (user: User | null) =>
@@ -28,7 +28,12 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           user: null,
         })),
+
       initializeAuth: async () => {
+        if (!get().isAuthenticated) {
+          console.log("User is already logged out, skipping auth check");
+          return;
+        }
         try {
           // バックエンドのエンドポイントを呼び出して認証状態を確認
           // HttpOnly属性を設定したクッキーのため、ブラウザからはアクセスできない

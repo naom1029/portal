@@ -14,7 +14,7 @@ export default function Register() {
     try {
       await registerUser(username, email, password);
       console.log("登録に成功しました");
-      navigate("/login");
+      navigate("/");
     } catch (error: any) {
       console.error("登録に失敗しました:", error.message);
     }
